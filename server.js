@@ -25,7 +25,7 @@ app.set("views","./views")
 app.set('title', 'My Page Server')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true,}))
-app.use('/static', express.static('public'))
+//app.use('/static', express.static('public'))
 app.use((req, res, next) => {
   console.log('Time: %d', Date.now())
   next()
@@ -62,7 +62,7 @@ const upload = multer({
 
 //video
 app.get('/v', function (req, res) {
-  res.redirect('/static/vv.html')
+  res.redirect('/public/vv.html')
 })
 
 app.post('/v', multipartMiddleware,  async (req, res) => {
