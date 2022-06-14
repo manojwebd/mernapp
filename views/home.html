@@ -1,11 +1,11 @@
 <%- include('header.html') -%>
 
     <h1>Users</h1>
-    <% if (members) { %>
+    <% if (users) { %>
         <ul id="users">
-            <% members.forEach(function(data,i){ %>
+            <% users.forEach(function(data,i){ %>
                 <li>
-                    <%= data.id %>. <%= data.uname %> : <%= data.email %>;
+                    <%= data.id %>. <%= data.name %> : <%= data.email %>;
                 </li>
             <% }) %> 
         </ul>

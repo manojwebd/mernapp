@@ -5,7 +5,6 @@ const multipartMiddleware = multipart()
 const path = require('path')
 const os = require('os')
 
-
 const express = require("express")
 const bodyParser = require('body-parser')
 const multer = require('multer') // v1.0.5
@@ -18,8 +17,6 @@ const fs = require('fs') */
 const port = process.env.PORT || 3003
 const app = express()
 //const upload = multer({ dest: 'uploads/' }) // for parsing multipart/form-data
-
-const db = require('./queries')
 
 
 app.engine('.html', require('ejs').__express);
@@ -81,20 +78,10 @@ const users = [
     { name: 'loki', email: 'loki@learnboost.com' },
     { name: 'jane', email: 'jane@learnboost.com' }
 ];
-
-//DB
-  app.get('/users', db.getUsers)
-  app.get('/users/:id', db.getUserById)
-  app.post('/users', db.createUser)
-  app.put('/users/:id', db.updateUser)
-  app.delete('/users/:id', db.deleteUser)
-//enD db
-
-app.get("/", async (req,res)=>{
-    var data = await db.getUsersArr();
+  
+app.get("/home", async (req,res)=>{
     res.render("home", {
         users: users,
-        members: data,
         title: "Home Page",
         header: "Some users"
     })
