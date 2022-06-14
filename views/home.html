@@ -1,0 +1,74 @@
+<%- include('header.html') -%>
+
+    <h1>Users</h1>
+    <% if (members) { %>
+        <ul id="users">
+            <% members.forEach(function(data,i){ %>
+                <li>
+                    <%= data.id %>. <%= data.uname %> : <%= data.email %>;
+                </li>
+            <% }) %> 
+        </ul>
+    <% } else { %>
+        <h3>No members found!</h3>
+    <% } %>
+    <hr/>
+    <form id="forma" action="profile" method="post" enctype="multipart/form-data">
+        <h4>Select image to upload: (Max Size: 340M)</h4>
+        <input type="file" name="fileToUpload" id="fileToUpload">
+        <input type="submit" value="Upload Image" name="submit">
+    </form>
+    <hr/>
+    <p class="admin"></p>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const parentDiv = document.querySelector(".admin");
+    window.addEventListener("load", async () => {
+        try {
+            let result = await axios({
+                method: "GET",
+                url: "/getFiles",
+            });
+            let files = result.data.files;
+
+            files.forEach((file) => {
+                markup = `
+              <div class="files__entity">
+                <i class="files__icon fa fa-file-text" aria-hidden="true"></i>
+                <span class="files__date">${file} </span>
+                <a href="static/files/${file}" target="_blank" class="files__link">View File</a>
+              </div>
+            `;
+                parentDiv.insertAdjacentHTML("beforeend", markup);
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    });
+</script>
+<script>
+    /* const form = document.getElementById("form");
+    form.addEventListener("submit", submitForm);
+    function submitForm(e) {
+        e.preventDefault();
+        const name = document.getElementById("fileToUpload");
+        const files = document.getElementById("fileToUpload");
+        const formData = new FormData();
+        formData.append("name", '8788y hyg');
+        for (let i = 0; i < files.files.length; i++) {
+            formData.append("files", files.files[i]);
+        }
+        fetch("http://localhost:3003/profile", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        })
+            .then((res) => console.log(res))
+            .catch((err) => ("Error occured", err));
+    } */
+</script>
+
+<%- include('footer.html') -%>
+
