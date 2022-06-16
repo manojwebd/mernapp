@@ -18,6 +18,37 @@ const port = process.env.PORT || 3003
 const app = express()
 //const upload = multer({ dest: 'uploads/' }) // for parsing multipart/form-data
 
+/* const dbPath = process.env.DATABASE_URL || 'postgres://yyuttopkkkmgsw:1b0bd3704e2354c8f20a144a61eb56ef3efe81ffd1a59b1c9fec4e7453cea279@ec2-54-227-248-71.compute-1.amazonaws.com:5432/ddndgd8jfp888c'
+//'postgresql://postgres:manoj123@localhost:5432/jhar_pg' //
+const { Client } = require('pg');
+
+const client = new Client({
+  connectionString: dbPath,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+client.connect();
+
+client.query('SELECT table_schema,table_name FROM information_schema.tables', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  client.end();
+}); */
+
+/* 
+const db = require('./queries')
+//DB
+  app.get('/users', db.getUsers)
+  app.get('/users/:id', db.getUserById)
+  app.post('/users', db.createUser)
+  app.put('/users/:id', db.updateUser)
+  app.delete('/users/:id', db.deleteUser)
+//enD db
+ */
 
 app.engine('.html', require('ejs').__express);
 app.set("view engine", "html")
@@ -25,6 +56,7 @@ app.set("views","./views")
 app.set('title', 'My Page Server')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true,}))
+app.use(express.static(path.join(__dirname, 'public')))
 //app.use('/static', express.static('public'))
 app.use((req, res, next) => {
   console.log('Time: %d', Date.now())
@@ -62,7 +94,7 @@ const upload = multer({
 
 //video
 app.get('/v', function (req, res) {
-  res.redirect('/public/vv.html')
+  res.redirect('vv.html')
 })
 
 app.post('/v', multipartMiddleware,  async (req, res) => {
@@ -449,7 +481,7 @@ app.post('/profile1', upload.single("fileToUpload"), function (req,res) {
   var tmp_path = req.file.path;
   /** The original name of the uploaded file
       stored in the variable "originalname". **/
-  var target_path = 'uploads/' + req.file.originalname;
+  var target_path = rootPathTmp + req.file.originalname;
   /** A better way to copy the uploaded file. **/
   var src = fs.createReadStream(tmp_path);
   var dest = fs.createWriteStream(target_path);
