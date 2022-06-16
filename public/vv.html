@@ -1,9 +1,21 @@
-<video autoplay id="video" style="width:100%; min-height:340px; height:100vh; flex:1;"></video>
-<div style="z-index:9999; padding:5px; background-color:#00000045; border:1px solid #CCC; position:fixed; bottom:10px; left:2px; width:100vw">
-<h3 id="status"></h3>
-<input id="record" type="button" value="record" />
-<input id="stop" type="button" value="stop" /> &nbsp;&nbsp;&nbsp;&nbsp; <b id="size"></b> 
-</div>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script src="videoCapture.js"></script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Manoj Kumar Gupta">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+  </head>
+  <body>
+    <video autoplay id="video" style="width:100%; min-height:340px; height:100vh; flex:1;"></video>
+    <div style="z-index:9999; padding:5px; background-color:#00000045; border:1px solid #CCC; position:fixed; bottom:10px; left:2px; width:100vw">
+    <h3 id="status"></h3>
+    <input id="record" type="button" value="record" style="padding:10px; background-color:green;  border:0px; font-size:18px" />
+    <input id="stop" type="button" value="stop"  style="padding:10px; background-color:red; border:0px; font-size:18px" /> &nbsp;&nbsp;&nbsp;&nbsp; <b id="size" style=" font-size:18px"></b> 
+    </div>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="videoCapture.js"></script>
+ </body>
+ </html>
