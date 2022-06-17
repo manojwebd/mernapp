@@ -47,9 +47,10 @@ body {
 
 .files__entity {
     background-color: lightgray;
-    display: inline-block;
+    display: block;
     padding: 5px 10px;
     text-align: center;
-    margin-top: 20px;
+    margin-top:10px;
     font-size: 14px;
+    border-bottom: 1px dashed #555;
 }

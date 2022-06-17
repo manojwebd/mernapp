@@ -62,7 +62,7 @@ app.use((req, res, next) => {
   console.log('Time: %d', Date.now())
   next()
 })
-app.use(helmet());
+//app.use(helmet()); 
 //upload files
 const rootPathTmp = './public/files/';
 const upload1 = multer({dest:rootPathTmp});
@@ -80,11 +80,13 @@ const multerStorage = multer.diskStorage({
 });
 // Multer Filter
 const multerFilter = (req, file, cb) => {
-  //if (file.mimetype.split("/")[1] === "pdf") {
+  //console.log(file.mimetype.split("/"))
+  if (file.mimetype.split("/")[1] === "pdf" || file.mimetype.split("/")[1] === "webm") {
     cb(null, true);
-  /* } else {
-    cb(new Error("Not a PDF File!!"), false);
-  } */
+   } else {
+    cb(new Error("Not a PDF/video File!!"), false);
+    console.log('format error: Not a PDF/video File!!')
+  }
 };
 const upload = multer({
   storage: multerStorage,

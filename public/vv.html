@@ -6,13 +6,57 @@
     <meta name="description" content="Manoj Kumar Gupta">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
+    <style>
+      #status { margin: 2px;}
+      video {
+          width: 100vw;
+          height: 100vh;
+          object-fit: cover;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 9990;
+          flex:1; margin-bottom:140px
+      }
+      #audiosts {
+        position: relative; width: 50%;
+        top: 10px; left: 10px; color: hotpink; z-index: 9998; padding: 4px 6px;
+      }
+      #audiobtn {
+        position: absolute; right: 15px; top: 10px; z-index: 9997; padding: 10px;
+      }
+      #audiobtn input { position: relative;}
+      #record {
+        padding:5px; background-color:red; color: bisque;  border:0px; font-size:18px;
+        width: 30px; height: 30px; border-radius: 50%; margin:2px 5px; border:1px solid black;
+      }
+      #stop {
+        padding:5px; background-color:#121212; border:0px; font-size:14px; display: none; width: 30px; height: 30px; margin:2px 5px; border:1px solid red;
+      }
+      #unmute {
+        padding:5px; background-color:#1a406c; color: aliceblue; border:0px; font-size:14px; display: none;
+      }
+      #mute {
+        padding:5px; background-color:blue; color: aliceblue; border:0px; font-size:14px;
+      }
+      ul {
+        margin: 0px; padding: 0px;
+      }
+    </style>
   </head>
-  <body>
-    <video autoplay id="video" style="width:100%; min-height:340px; height:100vh; flex:1;"></video>
-    <div style="z-index:9999; padding:5px; background-color:#00000045; border:1px solid #CCC; position:fixed; bottom:10px; left:2px; width:100vw">
-    <h3 id="status"></h3>
-    <input id="record" type="button" value="record" style="padding:10px; background-color:green;  border:0px; font-size:18px" />
-    <input id="stop" type="button" value="stop"  style="padding:10px; background-color:red; border:0px; font-size:18px" /> &nbsp;&nbsp;&nbsp;&nbsp; <b id="size" style=" font-size:18px"></b> 
+  <body bgcolor="#222">
+    <video autoplay id="video" ></video>
+    <div id="audiosts"></div>
+    <div id="audiobtn">
+      <input id="mute" type="button" value="Mute" />
+      <input id="unmute" type="button" value="Unmute" />
+    </div>
+    <div style="z-index:9992; padding:10px 5px; background-color:#ffffff78; border:1px solid #a7a7a7; position:fixed; bottom:0px; left:0px; width:100vw">
+    <ul id="ul"></ul>
+    <input id="record" type="button" />
+    <input id="stop" type="button" />
+    &nbsp;&nbsp; <b id="status"></b>&nbsp;&nbsp; 
+      <b id="size" style=" font-size:18px; margin-left: 10px;"></b> 
     </div>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
