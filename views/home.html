@@ -19,8 +19,8 @@
     </form>
     <hr/>
     <p class="admin"></p>
-    <script src="axios.min.js"></script>
-<script>
+<script src="axios.min.js" type="text/javascript"></script>
+<script type="text/javascript">
     const parentDiv = document.querySelector(".admin");
     window.addEventListener("load", async () => {
         try {
@@ -38,7 +38,7 @@
                 <a href="files/${file}" target="_blank" class="files__link">View File</a>
               </div>
             `;
-                parentDiv.insertAdjacentHTML("beforeend", markup);
+             parentDiv.insertAdjacentHTML("beforeend", markup);
             });
         } catch (error) {
             console.log(error);

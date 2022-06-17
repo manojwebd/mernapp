@@ -1,3 +1,7 @@
+html {
+    font-size: 100%;
+    scroll-behavior: smooth;
+}
 body {
     padding: 50px 80px;
     font: 14px "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
@@ -12,15 +16,11 @@ body {
     box-sizing: inherit;
 }
 
-html {
-    font-size: 62.5%;
-    scroll-behavior: smooth;
-}
+
 
 .admin {
-    margin-left: 50%;
-    margin-top: 7rem;
-    transform: translateX(-30%);
+    margin: 10px; 
+    display:block; padding:5px;
 }
 
 .admin__input {
