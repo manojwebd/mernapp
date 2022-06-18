@@ -4,8 +4,10 @@ const multipart = require('connect-multiparty')
 const multipartMiddleware = multipart()
 const path = require('path')
 const os = require('os')
-
+//const session = require('cookie-session')
 const express = require("express")
+const cookieParser = require("cookie-parser");
+const session = require('express-session')
 const bodyParser = require('body-parser')
 const multer = require('multer') // v1.0.5
 const helmet = require("helmet");
@@ -15,6 +17,7 @@ const puppeteer=require('puppeteer');
 const http = require('http')
 const fs = require('fs') */
 const port = process.env.PORT || 3003
+const secret = process.env.SECRET || 's3Cur3DB664646tfsfsf'
 const app = express()
 //const upload = multer({ dest: 'uploads/' }) // for parsing multipart/form-data
 
@@ -54,6 +57,19 @@ app.engine('.html', require('ejs').__express);
 app.set("view engine", "html")
 app.set("views","./views")
 app.set('title', 'My Page Server')
+app.use(cookieParser())
+const expiryDate = new Date(Date.now() + 60 * 60 * 2000) // 2 hour
+const sessn = {
+    secret: secret,
+    saveUninitialized:true,
+    cookie: { maxAge: expiryDate },
+    resave: false
+} 
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sessn.cookie.secure = true // serve secure cookies
+}
+app.use(session(sessn))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true,}))
 app.use(express.static(path.join(__dirname, 'public')))
@@ -62,7 +78,49 @@ app.use((req, res, next) => {
   console.log('Time: %d', Date.now())
   next()
 })
+//username and password
+const myusername = 'user1'
+const mypassword = 'mypassword21'
+let msession
 //app.use(helmet()); 
+
+app.get('/apppage',(req,res) => {
+    msession=req.session;
+    if(msession.userid){
+        res.send("Welcome User <a href=\'/logout'>click to logout</a>");
+    }else
+      res.render('login')
+})
+
+app.get('/auth_sess', function(req, res, next) {
+  console.log('req sessn', req.session)
+  if (req.session.views) {
+    req.session.views++
+    res.setHeader('Content-Type', 'text/html')
+    res.write('<p>views: ' + req.session.views + '</p>')
+    //res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>')
+    res.end()
+  } else {
+    req.session.views = 1
+    res.end('welcome to the session demo. refresh!')
+  }
+})
+app.post('/user',(req,res) => {
+    if(req.body.username == myusername && req.body.password == mypassword){
+        msession=req.session;
+        msession.userid=req.body.username;
+        console.log(req.session)
+        //res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
+        res.redirect('/home');
+    }
+    else{
+        res.send('Invalid username or password');
+    }
+})
+app.get('/logout',(req,res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
 //upload files
 const rootPathTmp = './public/files/';
 const upload1 = multer({dest:rootPathTmp});
@@ -100,11 +158,14 @@ app.get('/v', function (req, res) {
 })
 
 app.post('/v', multipartMiddleware,  async (req, res) => {
-  console.log('files', req.files.data.path)
-  let location = await path.join(os.tmpdir(), 'upload.webm')
-  //fs.rename(req.files.data.path, location)
-  console.log(`upload successful, file written to ${location}`)
-  res.send(`upload successful, file written to ${location}`)
+    msession=req.session;
+    if(msession.userid){
+      console.log('files', req.files.data.path)
+      let location = await path.join(os.tmpdir(), 'upload.webm')
+      //fs.rename(req.files.data.path, location)
+      console.log(`upload successful, file written to ${location}`)
+      res.send(`upload successful, file written to ${location}`)
+    }else res.redirect('login')
 })
 
 const users = [
@@ -114,11 +175,17 @@ const users = [
 ];
   
 app.get("/home", async (req,res)=>{
-    res.render("home", {
+  msession=req.session;
+    if(msession.userid){ 
+        res.render("home", {
         users: users,
         title: "Home Page",
-        header: "Some users"
+        header: "Some users",
+        user:msession.userid || false
     })
+    }else
+      res.render('login')
+    
 })
 
 app.get('/createImage', async (req, res) => {
@@ -463,18 +530,22 @@ app.use("/pdf", async (req, res) => {
 });
 
  app.post('/profile', upload1.single('fileToUpload'), function(req, res) {
-  console.log(req.file);
-  var filename = req.file.filename; 
-  var mimetype = req.file.mimetype; 
-  mimetype = mimetype.split("/"); 
-  var filetype = mimetype[1]; 
-  var old_file = rootPathTmp+filename; 
-  var new_file = rootPathTmp+'usr_'+Date.now()+'_'+req.file.originalname; 
-  fs.rename(old_file,new_file,function name(err) {
-    if (err) throw err;
-    console.log('File Renamed.');
-  });
-  res.send("file saved on server");
+  msession=req.session;
+    if(msession.userid){ 
+      console.log(req.file);
+      var filename = req.file.filename; 
+      var mimetype = req.file.mimetype; 
+      mimetype = mimetype.split("/"); 
+      var filetype = mimetype[1]; 
+      var old_file = rootPathTmp+filename; 
+      var new_file = rootPathTmp+'usr_'+Date.now()+'_'+req.file.originalname; 
+      fs.rename(old_file,new_file,function name(err) {
+        if (err) throw err;
+        console.log('File Renamed.');
+      });
+      res.send("file saved on server <a href='home'>click to home</a>");
+    }else
+      res.render('login')
  });
 
 app.post('/profile1', upload.single("fileToUpload"), function (req,res) {
@@ -488,7 +559,7 @@ app.post('/profile1', upload.single("fileToUpload"), function (req,res) {
   var src = fs.createReadStream(tmp_path);
   var dest = fs.createWriteStream(target_path);
   src.pipe(dest); fs.unlinkSync(tmp_path);
-  src.on('end', function() { res.send('complete'); });
+  src.on('end', function() { res.send("complete <a href='home'>click to home</a>"); });
   src.on('error', function(err) { res.send('error',err); });
 
 });
@@ -508,32 +579,45 @@ app.post('/profile2', upload.single("fileToUpload"), async (req, res) => {
 })
 
 app.get("/getFiles", async (req, res) => {
-  try {
-    //const files = await File.find();
-    const files = fs.readdirSync(rootPathTmp);
-    let fileData = [];
-    /* files.map(file => {
-      if (path.extname(file) == ".md")
-        fileData.push({name:file,createdAt:9090});
-    }) */
-    res.status(200).json({
-      status: "success",
-      files,
-    });
-  } catch (error) {
-    res.json({
-      status: "Fail",
-      error,
-    });
-  }
+  msession=req.session;
+    if(msession.userid){
+       // res.send("Welcome User <a href=\'/logout'>click to logout</a>");
+      try {
+        //const files = await File.find();
+        const files = fs.readdirSync(rootPathTmp);
+        let fileData = [];
+        /* files.map(file => {
+          if (path.extname(file) == ".md")
+            fileData.push({name:file,createdAt:9090});
+        }) */
+        res.status(200).json({
+          status: "success",
+          files,
+        });
+      } catch (error) {
+        res.json({
+          status: "Fail",
+          error, files:[]
+        });
+      }
+    }else {
+      res.json({
+          status: "Failed",
+          error:'login failed',files:[]
+        });
+    }
 });
 
 app.get("/admin", (req,res)=>{
-    res.send("<h2>Hello! Admin</h2>")
+    msession=req.session;
+    if(msession.userid)
+      res.send("<h2>Hello! Admin</h2>")
+    else 
+        res.render('login')
 })
 
 app.get('/api', (request, response) => {
-  response.json({ info: 'Node.js, Express, and Postgres API' })
+    response.json({ info: 'Node.js, Express, and Postgres API' })
 })
 
 /* const options = {
