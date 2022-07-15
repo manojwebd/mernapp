@@ -3,6 +3,7 @@
 const multipart = require('connect-multiparty')
 const multipartMiddleware = multipart()
 const path = require('path')
+const moment = require('moment') // require
 const os = require('os')
 //const session = require('cookie-session')
 const express = require("express")
@@ -13,12 +14,15 @@ const multer = require('multer') // v1.0.5
 const helmet = require("helmet");
 const fs = require('fs'); 
 const puppeteer=require('puppeteer');
+
 /* const https = require('https')
 const http = require('http')
 const fs = require('fs') */
 const port = process.env.PORT || 3003
 const secret = process.env.SECRET || 's3Cur3DB664646tfsfsf'
 const app = express()
+const http = require('http');
+var server = http.createServer(app);
 //const upload = multer({ dest: 'uploads/' }) // for parsing multipart/form-data
 
 /* const dbPath = process.env.DATABASE_URL || 'postgres://yyuttopkkkmgsw:1b0bd3704e2354c8f20a144a61eb56ef3efe81ffd1a59b1c9fec4e7453cea279@ec2-54-227-248-71.compute-1.amazonaws.com:5432/ddndgd8jfp888c'
@@ -78,6 +82,9 @@ app.use((req, res, next) => {
   console.log('Time: %d', Date.now())
   next()
 })
+
+
+
 //username and password
 const myusername = 'user1'
 const mypassword = 'mypassword21'
@@ -620,6 +627,16 @@ app.get('/api', (request, response) => {
     response.json({ info: 'Node.js, Express, and Postgres API' })
 })
 
+//chat api
+
+app.get('/chat', (req, res) => {
+  res.sendFile(__dirname + '/public/chat.html');
+});
+
+app.get('/chatn', (req, res) => {
+  res.sendFile(__dirname + '/public/chatn.html');
+});
+
 /* const options = {
   key: fs.readFileSync('privkey.pem'),
   cert: fs.readFileSync('privkey.pem')
@@ -629,10 +646,74 @@ app.get('/api', (request, response) => {
 /* http.createServer(app).listen(8085)
 https.createServer(options, app).listen(8441) */
 
-app.listen(port, ()=>{
-    console.log(`app listening on port ${port}`)
-}) 
+server.listen(port, ()=>{
+    console.log(`app listening on port : ${port}`)
+})
+const ip_npm = require('ip');
+//const address = require('address');
 
+const getIP = () =>{
+  return ip_npm.address();
+}
+const io = require("socket.io")(server);
+const clients = findClientsSocket('room');
+let name; let myusers = []; 
+io.on('connection', (socket) => {
+  let ip_addrs = "";
+    /* address(function (err, addr) {
+      if(!err) ip_addrs=addr;
+      console.log(addr); // '78:ca:39:b0:e6:7d'
+    });  */
+  console.log('new user connected', socket.id); 
+  socket.on('joining msg', (username) => {
+    const time = moment().format("hh:mm A");
+    const my_ip = getIP();
+    
+    name = username; 
+    myusers = [...myusers,{username,"id":socket.id,my_ip,ip_addrs}]; 
+    io.emit('chat message', {name,"msg":`---${name} joined the chat---`,'bg':'true', time});
+  });
+  socket.on("upload", (fileData) => {
+    // save the content to the disk, for example
+    const filepathUp = "tmp/upload/"+fileData.fname;
+    fs.writeFileSync("./public/"+filepathUp, fileData.file, (err) => {
+      callback({ message: err ? "failure" : "success" });
+    });
+    socket.broadcast.emit('sendphoto',{"name":fileData.name,"msg":"Photo", "photo":filepathUp, "time":fileData.time}); 
+  });
+  socket.on('sendphoto', (msg) => {
+    socket.broadcast.emit('sendphoto', msg); //sending message photo to all except  
+  });
+  socket.on('disconnect', () => {
+    const time = moment().format("hh:mm A"); 
+    console.log('user disconnected ' );
+    io.emit('chat message', {name,"msg":`---${name} left the chat---`,'bg':'true', time});
+      let restUsers = [];
+    if(myusers.length>0){
+      restUsers = myusers.filter(user=> user.id!=socket.id);
+      console.log('rest',restUsers) 
+      myusers = [...restUsers];
+    }
+    io.emit('getUsers', {users:myusers,time});
+  });
+  socket.on('getUsers', () => {
+    const time = moment().format("hh:mm A");
+    console.log('get users');
+    io.emit('getUsers', {users:myusers,time});
+    
+  });
+  socket.on('chat message', (msg) => {
+    socket.broadcast.emit('chat message',msg); //sending message to all  
+    //console.log('users',myusers);//,socket
+  });
+  
+  socket.on('typing', function(name) {
+    socket.broadcast.emit('typing', name);
+  });
+  socket.on('nottyping', function(name) {
+    socket.broadcast.emit('typing', '');
+  });
+});
 
 async function crawlSite(){
     console.log('Function Crawl Site executed');
@@ -737,3 +818,23 @@ async function generatePDF(html = "Manoj") {
 
   return pdfBuffer;
 };
+
+function findClientsSocket(roomId, namespace) {
+    var res = []
+    // the default namespace is "/"
+    , ns = io.of(namespace ||"/");
+
+    if (ns) {
+        for (var id in ns.connected) {
+            if(roomId) {
+                var index = ns.connected[id].rooms.indexOf(roomId);
+                if(index !== -1) {
+                    res.push(ns.connected[id]);
+                }
+            } else {
+                res.push(ns.connected[id]);
+            }
+        }
+    }
+    return res;
+}

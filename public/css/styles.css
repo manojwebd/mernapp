@@ -53,4 +53,7 @@ body {
     margin-top:10px;
     font-size: 14px;
     border-bottom: 1px dashed #555;
+      
+    display: flex;
+    justify-content: space-between;
 }

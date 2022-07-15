@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Color theme for statusbar (Android only) -->
+    <meta name="theme-color" content="#2196f3">
+    <!-- Your app title -->
+    <title>Chat Room</title>
+    <!-- Path to Framework7 Library Bundle CSS -->
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.1.2/css/material-design-iconic-font.min.css'>
+    <!-- <link rel='stylesheet' href='https://rawgit.com/marvelapp/devices.css/master/assets/devices.min.css'> -->
+    <link rel="stylesheet" href="css/chatn.css"> 
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js'></script>
+    <!-- <script type="text/javascript" src="chatn.js"></script>  -->
+    <script>
+		var name = prompt("Please enter your name","Manoj");
+        //if(name=="") return false;
+	</script>
+  </head>
+  <body>
+        <div class="page">
+            <div class="marvel-device nexus5">
+                <div class="top-bar"></div>
+                <div class="sleep"></div>
+                <div class="volume"></div>
+                <div class="camera"></div>
+                <div class="screen">
+                <div class="screen-container">
+                    <div class="status-bar">
+                    <div class="time"></div>
+                    <div class="battery">
+                        <i class="zmdi zmdi-battery"></i>
+                    </div>
+                    <div class="network">
+                        <i class="zmdi zmdi-network"></i>
+                    </div>
+                    <div class="wifi">
+                        <i class="zmdi zmdi-wifi-alt-2"></i>
+                    </div>
+                    <div class="star">
+                        <i class="zmdi zmdi-star"></i>
+                    </div>
+                    </div>
+                    <div class="chat">
+                        <div class="sidebar">
+                            <div align="center">
+                                <div class="avatar" align="center">
+                                    <img src="https://cdn.framework7.io/placeholder/people-100x100-2.jpg" alt="Avatar">
+                                </div>
+                                <div class="name">
+                                    <span id="myname">User 1</span>
+                                </div>
+                            </div>
+                            <div class="side-menu">
+                                <div id="userlist">
+                                    <ul>
+                                        <li>
+                                             <img src="https://cdn.framework7.io/placeholder/people-100x100-3.jpg" alt="Avatar">
+                                             <div class="frndinfo">Manoj</div>
+                                        </li>
+                                        <li>
+                                             <img src="https://cdn.framework7.io/placeholder/people-100x100-8.jpg" alt="Avatar">
+                                             <div class="frndinfo">Ajay</div>
+                                        </li>
+                                        <li>
+                                             <img src="https://cdn.framework7.io/placeholder/people-100x100-9.jpg" alt="Avatar">
+                                             <div class="frndinfo">Vijay</div>
+                                        </li>
+                                    </ul>
+                                    <p align="center"></p>
+                                </div> 
+                             <div class="poweredby"> Designed & Developed By <br/> <b> Manoj Kumar Gupta</b> <br/> <em>Sr. Software Developer, JHC</em></div>
+                            </div>
+                        </div>
+                    <div class="chat-container">
+                        <div class="user-bar">
+                        <div class="back">
+                            <i class="zmdi zmdi-arrow-left"></i>
+                        </div>
+                        <div class="avatar">
+                            <img src="https://cdn.framework7.io/placeholder/people-100x100-7.jpg" alt="Avatar">
+                        </div>
+                        <div class="name">
+                            <span>Chat Room </span>
+                            <span class="status" id="typing_sts">online</span>
+                        </div>
+                        <div class="actions more">
+                            <i class="zmdi zmdi-more-vert"></i>
+                        </div>
+                        <div class="actions attachment">
+                            <i class="zmdi zmdi-attachment-alt"></i>
+                        </div>
+                        <div class="actions">
+                            <i class="zmdi zmdi-phone"></i>
+                        </div>
+                        </div>
+                        <div class="conversation">
+                        <div class="conversation-container" id="conversation">
+                             
+                        </div>
+                        <form class="conversation-compose">
+                            <div class="emoji" id="mbtn_open">
+                                <label for="mbtn_openx">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" id="smiley" x="3147" y="3209"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.153 11.603c.795 0 1.44-.88 1.44-1.962s-.645-1.96-1.44-1.96c-.795 0-1.44.88-1.44 1.96s.645 1.965 1.44 1.965zM5.95 12.965c-.027-.307-.132 5.218 6.062 5.55 6.066-.25 6.066-5.55 6.066-5.55-6.078 1.416-12.13 0-12.13 0zm11.362 1.108s-.67 1.96-5.05 1.96c-3.506 0-5.39-1.165-5.608-1.96 0 0 5.912 1.055 10.658 0zM11.804 1.01C5.61 1.01.978 6.034.978 12.23s4.826 10.76 11.02 10.76S23.02 18.424 23.02 12.23c0-6.197-5.02-11.22-11.216-11.22zM12 21.355c-5.273 0-9.38-3.886-9.38-9.16 0-5.272 3.94-9.547 9.214-9.547a9.548 9.548 0 0 1 9.548 9.548c0 5.272-4.11 9.16-9.382 9.16zm3.108-9.75c.795 0 1.44-.88 1.44-1.963s-.645-1.96-1.44-1.96c-.795 0-1.44.878-1.44 1.96s.645 1.963 1.44 1.963z" fill="#7d8489"/></svg>
+                                <button name="mbtn_openx" type="button" id="mbtn_openx" style="display:none;">View</button>
+                                </label>
+                            </div>
+                            <input class="input-msg" name="input" id="input" placeholder="Type a message" autocomplete="off" autofocus></input>
+                            <div class="photo">
+                                <label for="file-input"><i class="zmdi zmdi-camera"></i>
+                                <input type="file" name="file-input" id="file-input" onchange="upload(this.files)" />
+                                </label>
+                            </div>
+                            <div class="photo">
+                                <label for="file-input"><i class="zmdi zmdi-mic"></i>
+                                <input type="file" name="file-input" id="file-input" onchange="upload(this.files)" />
+                                </label>
+                            </div>
+                            <button type="submit" class="send">
+                                <div class="circle">
+                                <i class="zmdi zmdi-mail-send"></i>
+                                </div>
+                            </button>
+                        </form>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- The Modal -->
+        <div id="myModal" class="modal"> 
+            <center>
+                <div class="modal-content"><br><br>
+                    <button type="button" id="mbtn_close">Close</button>
+                    <div id="emojis"> </div>
+                </div>
+            </center>
+        </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="emoji.json"></script>
+    <script>
+        const modal = document.getElementById('myModal');
+        //modal.style.display = "block";
+        const blueTick = `<span class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" id="msg-dblcheck-ack" x="2063" y="2076"><path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z" fill="#4fc3f7"/></svg></span>`;
+        const messages = $('#conversation');
+        let shouldScroll;
+        var socket = io();
+        socket.emit('joining msg', name);
+        function upload(files) {
+            console.log(files[0].name, files[0].size, files[0].type);
+            const time = moment().format("hh:mm A");
+            socket.emit("upload", {file:files[0],name,fname: files[0].name,size: files[0].size, type: files[0].type, time }, (status) => {
+                console.log(status);
+            });
+            messages.append('<div class="message sent"><span  class="msg-text">Send Photo</span><span  class="msg-photo"><button onclick="alert(' + files[0].name + '\')" class="picviewer" ><img src="./tmp/upload/' + files[0].name + '" /></button></span><span class="metadata"><span class="time">' + time + '</span>' + blueTick + '</span></div>');
+            $('#input').val('');
+            scrollToBottom(); 
+        }
+        $('form').submit(function(e) {
+            e.preventDefault();
+            const msg = $('#input').val();        // will prevent page reloading
+            const time = moment().format("hh:mm A");        // will prevent page reloading
+            socket.emit('chat message', {name, msg, time});
+            messages.append('<div class="message sent"><span  class="msg-text">'+msg+'</span><span class="metadata"><span class="time">'+time+'</span>'+blueTick+'</span></div>');
+            $('#input').val('');
+            scrollToBottom(); 
+            return false;
+        });
+        $("#mbtn_openx").click(function(ee){
+            modal.style.display = "block";
+        })
+        $("#mbtn_close").click(function(ee){
+            modal.style.display = "none";
+        })
+        socket.on('chat message', function(data){
+            console.log(data)
+            const bgColor = data.bg?"bg_light":"";
+            if(data.bg=="true")
+                messages.append('<div class="message bg_light"><span class="msg-text">'+data.msg+' '+data.time+'</span></div>');
+            else
+                 messages.append('<div class="message received"><span class="username">'+data.name+'</span><span class="msg-text">'+data.msg+'</span><span class="metadata"><span class="time">'+data.time+'</span></span></div>');
+            scrollToBottom();
+        });
+        socket.on('sendphoto', function (data) {
+            //console.log('photo',data);
+            messages.append('<div class="message received"><span class="username">' + data.name + '</span><span class="msg-text">' + data.msg + '</span><span  class="msg-photo"><button class="picviewer" onclick="alert(\'' + data.photo + '\')"><img src="' + data.photo + '"/></button></span><span class="metadata"><span class="time">' + data.time + '</span></span></div>');
+            scrollToBottom();
+        });
+        socket.on('typing', function(uname) {
+            $('#typing_sts').html(uname==""?"Online":uname  + " is typing...");
+        });
+        socket.on('getUsers', function(data) { 
+            $("#userlist ul").html(""); 
+            $("#userlist p").html("Time: <b>"+data.time+"</b>");
+            if(data.users){
+            data.users.map((user,key)=>{
+                if(user.username!= name)
+                $("#userlist ul").append('<li><img src="https://cdn.framework7.io/placeholder/people-100x100-'+ (key+1) +'.jpg" alt="Avatar"><div class="frndinfo">'+user.username+'</div></li>');
+            })
+            }
+        });
+        $('#input').bind("keypress",  function() {
+            socket.emit('typing',name);
+        });
+        $('#input').bind("keyup",  function() {
+            setTimeout(() => {
+                socket.emit('nottyping',name);
+            }, 3000);
+        });
+        socket.emit('getUsers');
+        $(document).ready(function(e){
+            socket.emit('getUsers');
+            $("#myname").html(name);
+            $("#conversation").on('click',".picviewer",function(ee){
+                console.log(ee.target);
+            })
+            loadEmog()
+            $(document).on('change',"#emojis input",function(ee){
+                var typed_msg = $('#input').val();
+                console.log(typed_msg+" "+ee.target.value+" ");
+                $('#input').val(typed_msg+" "+ee.target.value+" ")
+                
+            })
+        })
+        function scrollToBottom() {
+            messages.scrollTop(messages.prop('scrollHeight'));
+        }
+        function showpic(imgSrc){
+             console.log(imgSrc);
+        }
+        function loadEmog(){
+            $("#emojis").html('');
+            fetch("html_unicode.json")
+            .then(response => response.json())
+            .then(json => {
+                Object.keys(json).forEach((em,i)=>{
+                    $("#emojis").append('<label><input type="radio" class="emojix" name="emojix" value="'+json[em]+'"> '+json[em]+'</label>');
+                    //console.log(json[em]);
+                }); 
+                return true;
+            });
+        }
+    </script>
+  </body>
+</html>
