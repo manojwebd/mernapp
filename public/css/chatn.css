@@ -25,7 +25,14 @@ body {
   align-items: center;
   justify-content: center;
 }
-
+.main-pagex{
+  width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .marvel-device .screen {
   text-align: left;
 }
@@ -69,25 +76,39 @@ body {
  
 .sidebar { width:300px; background: #044c45; height: calc(100vh - 2px); }
 .sidebar .name { padding:4px; background-color:#f9f9f9; color:#005e54;}
-#userlist {
+.userlist {
   padding: 10px 0px;
 }
-.sidebar ul { margin:0px; padding:0px;}
-.sidebar ul li { 
+
+.userlist ul { margin:0px; padding:0px;}
+.userlist ul li { 
   margin: 0px;
-  padding: 8px 10px;
-  border-bottom: 1px solid #346e67;
+  padding: 8px 10px; 
   background-color: #1b685e;
   display:flex;
-  justify-content: space-between; align-items: center;
+  justify-content: space-between; align-items: flex-start;
 }
-.sidebar ul li img{
-  width: 45px; height: 45px; object-fit: cover; 
+.frndinfo {
+  width: 100%;
+  text-align: left; font-weight: 500;
+  padding-left: 10px;
+  color: #d5ffe2;
+}
+.userlist-div ul li { 
+  background-color: #ffffff;
+
+}
+.userlist ul li img{
+  width:55px; height:55px; object-fit: cover; 
   margin:0px; display: block;
   border-radius: 50%;
 }
-.frndinfo {
-  width: 100%; text-align: left; padding-left: 10px; color: #d5ffe2;
+.userlist-div .frndinfo {
+  color: #000;
+}
+.frndinfo a {
+  color: #000; text-decoration: none;
+  display: block; padding: 5px;
 }
 #emojis {
   height:240px;width:80%; border:1px solid blue;padding:10px; overflow:scroll;
@@ -178,7 +199,9 @@ body {
   background: #efe7dd url("https://cloud.githubusercontent.com/assets/398893/15136779/4e765036-1639-11e6-9201-67e728e86f39.jpg") repeat;
   z-index: 0;
 }
-
+.userlist-div {
+  background: #ffffff !important;
+}
 .conversation ::-webkit-scrollbar {
   transition: all .5s;
   width: 5px;
@@ -450,7 +473,8 @@ body {
 
 /* Small Screens */
 
-@media (max-width:1368px) {
+@media (max-width:468px) {
+  .sidebar { display: none;}
   .marvel-device.nexus5 {
     border-radius: 0;
     flex: none;

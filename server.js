@@ -657,20 +657,33 @@ const getIP = () =>{
 }
 const io = require("socket.io")(server);
 const clients = findClientsSocket('room');
-let name; let myusers = []; 
+let name; const messages = [];
 io.on('connection', (socket) => {
+  const username = socket.handshake.auth.username;
+  if (!username) {
+    console.log("invalid username");
+  } else socket.username = username;
+  const my_ip = getIP();
+  const usersx = [];
+  for (let [id, socket] of io.of("/").sockets) {
+    usersx.push({
+      id: id,
+      username: socket.username,
+      my_ip
+    });
+  }
+  const time = moment().format("hh:mm A");
+  //console.log("users",socket.handshake.auth.username,{users:usersx,time});
+  io.emit('users', {users:usersx,time});
   let ip_addrs = "";
     /* address(function (err, addr) {
       if(!err) ip_addrs=addr;
       console.log(addr); // '78:ca:39:b0:e6:7d'
     });  */
-  console.log('new user connected', socket.id); 
+  //console.log('new user connected', socket.id); 
   socket.on('joining msg', (username) => {
     const time = moment().format("hh:mm A");
-    const my_ip = getIP();
-    
-    name = username; 
-    myusers = [...myusers,{username,"id":socket.id,my_ip,ip_addrs}]; 
+    name = username;
     io.emit('chat message', {name,"msg":`---${name} joined the chat---`,'bg':'true', time});
   });
   socket.on("upload", (fileData) => {
@@ -684,32 +697,37 @@ io.on('connection', (socket) => {
   socket.on('sendphoto', (msg) => {
     socket.broadcast.emit('sendphoto', msg); //sending message photo to all except  
   });
-  socket.on('disconnect', () => {
-    const time = moment().format("hh:mm A"); 
-    console.log('user disconnected ' );
+  socket.on('connect', () => { 
+    console.log('user disconnected');
+      usersx.forEach((user) => {
+      if (user.self) {
+        user.connected = true;
+      }
+    });
     io.emit('chat message', {name,"msg":`---${name} left the chat---`,'bg':'true', time});
-      let restUsers = [];
-    if(myusers.length>0){
-      restUsers = myusers.filter(user=> user.id!=socket.id);
-      console.log('rest',restUsers) 
-      myusers = [...restUsers];
-    }
-    io.emit('getUsers', {users:myusers,time});
   });
-  socket.on('getUsers', () => {
-    const time = moment().format("hh:mm A");
-    console.log('get users');
-    io.emit('getUsers', {users:myusers,time});
-    
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+      usersx.forEach((user) => {
+      if (user.self) {
+        user.connected = false;
+      }
+    });
+    io.emit('chat message', {name,"msg":`---${name} left the chat---`,'bg':'true', time});
   });
   socket.on('chat message', (msg) => {
-    socket.broadcast.emit('chat message',msg); //sending message to all  
-    //console.log('users',myusers);//,socket
+    if(msg.chatwith.flag=='group')
+      socket.broadcast.emit('chat message',msg); //sending message to all  
+    else
+      socket.to(msg.chatwith.id).emit('chat message',msg); //sending message to all  
+      messages.push(msg);
+    //console.log('server user msg',msg);//,socket
   });
   
   socket.on('typing', function(name) {
     socket.broadcast.emit('typing', name);
   });
+
   socket.on('nottyping', function(name) {
     socket.broadcast.emit('typing', '');
   });

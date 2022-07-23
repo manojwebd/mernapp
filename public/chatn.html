@@ -5,11 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <!-- Color theme for statusbar (Android only) -->
     <meta name="theme-color" content="#2196f3">
-    <!-- Your app title -->
-    <title>Chat Room</title>
-    <!-- Path to Framework7 Library Bundle CSS -->
+    <title id="xtitle">Chat Room</title>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.1.2/css/material-design-iconic-font.min.css'>
     <!-- <link rel='stylesheet' href='https://rawgit.com/marvelapp/devices.css/master/assets/devices.min.css'> -->
     <link rel="stylesheet" href="css/chatn.css"> 
@@ -17,6 +14,7 @@
     <!-- <script type="text/javascript" src="chatn.js"></script>  -->
     <script>
 		var name = prompt("Please enter your name","Manoj");
+        let chatwith = {id:'', name:'', flag:'group'};
         //if(name=="") return false;
 	</script>
   </head>
@@ -55,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="side-menu">
-                                <div id="userlist">
+                                <div class="userlist">
                                     <ul>
                                         <li>
                                              <img src="https://cdn.framework7.io/placeholder/people-100x100-3.jpg" alt="Avatar">
@@ -75,16 +73,42 @@
                              <div class="poweredby"> Designed & Developed By <br/> <b> Manoj Kumar Gupta</b> <br/> <em>Sr. Software Developer, JHC</em></div>
                             </div>
                         </div>
-                    <div class="chat-container">
+                    <div class="main-pagex">
+                        <!-- user list -->
+                    <div class="chat-container userlistx">
+                        <div class="user-bar"> 
+                            <div class="avatar">
+                                <img src="https://cdn.framework7.io/placeholder/people-100x100-7.jpg" alt="Avatar">
+                            </div>
+                            <div class="name">
+                                <span id="mynamex">Chat App </span> 
+                            </div>
+                            <div class="actions more">
+                                <i class="zmdi zmdi-more-vert"></i>
+                            </div> 
+                        </div>
+                        <div class="conversation userlist-div">
+                            <div class="conversation-container">
+                                <div class="userlist">
+                                    <ul>
+                                    </ul>
+                                    <p align="center"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /user list -->
+                    <!-- chat page -->
+                    <div class="chat-container chatpagex" style="display: none;">
                         <div class="user-bar">
                         <div class="back">
-                            <i class="zmdi zmdi-arrow-left"></i>
+                            <a class="gouserlist" href="#"><i class="zmdi zmdi-arrow-left"></i></a>
                         </div>
                         <div class="avatar">
                             <img src="https://cdn.framework7.io/placeholder/people-100x100-7.jpg" alt="Avatar">
                         </div>
                         <div class="name">
-                            <span>Chat Room </span>
+                            <span id="chatwith_nm">Chat Room </span>
                             <span class="status" id="typing_sts">online</span>
                         </div>
                         <div class="actions more">
@@ -98,9 +122,7 @@
                         </div>
                         </div>
                         <div class="conversation">
-                        <div class="conversation-container" id="conversation">
-                             
-                        </div>
+                        <div class="conversation-container" id="conversation"></div>
                         <form class="conversation-compose">
                             <div class="emoji" id="mbtn_open">
                                 <label for="mbtn_openx">
@@ -116,19 +138,21 @@
                             </div>
                             <div class="photo">
                                 <label for="file-input"><i class="zmdi zmdi-mic"></i>
-                                <input type="file" name="file-input" id="file-input" onchange="upload(this.files)" />
-                                </label>
-                            </div>
-                            <button type="submit" class="send">
+                                    <input type="file" name="file-input" id="file-input" onchange="upload(this.files)" />
+                                 </label>
+                                </div>
+                                <button type="submit" class="send">
                                 <div class="circle">
                                 <i class="zmdi zmdi-mail-send"></i>
                                 </div>
-                            </button>
-                        </form>
+                                </button>
+                            </form>
+                            </div>
+                        </div>
+                    <!-- /chat page -->
+                        </div>
                         </div>
                     </div>
-                    </div>
-                </div>
                 </div>
             </div>
         </div>
@@ -152,9 +176,10 @@
         const messages = $('#conversation');
         let shouldScroll;
         var socket = io();
+        socket.auth = { username: name };
         socket.emit('joining msg', name);
         function upload(files) {
-            console.log(files[0].name, files[0].size, files[0].type);
+            //console.log(files[0].name, files[0].size, files[0].type);
             const time = moment().format("hh:mm A");
             socket.emit("upload", {file:files[0],name,fname: files[0].name,size: files[0].size, type: files[0].type, time }, (status) => {
                 console.log(status);
@@ -167,7 +192,7 @@
             e.preventDefault();
             const msg = $('#input').val();        // will prevent page reloading
             const time = moment().format("hh:mm A");        // will prevent page reloading
-            socket.emit('chat message', {name, msg, time});
+            socket.emit('chat message', {name, msg, time, chatwith, from:socket.id});
             messages.append('<div class="message sent"><span  class="msg-text">'+msg+'</span><span class="metadata"><span class="time">'+time+'</span>'+blueTick+'</span></div>');
             $('#input').val('');
             scrollToBottom(); 
@@ -180,12 +205,12 @@
             modal.style.display = "none";
         })
         socket.on('chat message', function(data){
-            console.log(data)
+            //console.log('client msg',data);
             const bgColor = data.bg?"bg_light":"";
             if(data.bg=="true")
                 messages.append('<div class="message bg_light"><span class="msg-text">'+data.msg+' '+data.time+'</span></div>');
-            else
-                 messages.append('<div class="message received"><span class="username">'+data.name+'</span><span class="msg-text">'+data.msg+'</span><span class="metadata"><span class="time">'+data.time+'</span></span></div>');
+            else if(chatwith.id===data.from)
+                messages.append('<div class="message received"><span class="username">'+data.name+'</span><span class="msg-text">'+data.msg+'</span><span class="metadata"><span class="time">'+data.time+'</span></span></div>');
             scrollToBottom();
         });
         socket.on('sendphoto', function (data) {
@@ -196,13 +221,15 @@
         socket.on('typing', function(uname) {
             $('#typing_sts').html(uname==""?"Online":uname  + " is typing...");
         });
-        socket.on('getUsers', function(data) { 
-            $("#userlist ul").html(""); 
-            $("#userlist p").html("Time: <b>"+data.time+"</b>");
+        socket.on('users', function(data) { 
+            $(".userlist ul").html(""); 
+            $(".userlist p").html("Time: <b>"+data.time+"</b>");
+            
             if(data.users){
             data.users.map((user,key)=>{
-                if(user.username!= name)
-                $("#userlist ul").append('<li><img src="https://cdn.framework7.io/placeholder/people-100x100-'+ (key+1) +'.jpg" alt="Avatar"><div class="frndinfo">'+user.username+'</div></li>');
+                user.self = user.id === socket.id;
+                if(user.username!= name) 
+                $(".userlist ul").append('<li><a href="#" class="profile_picview"><img src="https://cdn.framework7.io/placeholder/people-100x100-'+ (key+1) +'.jpg" alt="Avatar"></a><div class="frndinfo"><a href="#'+user.id+'" id="'+user.id+'" title="'+user.username+'" class="chatwith">'+user.username+'</a></div></li>');
             })
             }
         });
@@ -214,17 +241,33 @@
                 socket.emit('nottyping',name);
             }, 3000);
         });
-        socket.emit('getUsers');
+        //socket.emit('getUsers');
         $(document).ready(function(e){
-            socket.emit('getUsers');
-            $("#myname").html(name);
+            $("#xtitle").text("Chat App - "+name);
+            //socket.emit('getUsers');
+            $("#myname,#mynamex").html(name);
             $("#conversation").on('click',".picviewer",function(ee){
                 console.log(ee.target);
             })
-            loadEmog()
+            loadEmog(); 
+            $(document).on('click',".gouserlist",function(ee){
+                chatwith = {id:"",username:"",flag:'group'};
+                $(".userlistx").css('display',"block");
+                $(".chatpagex").css('display', "none");
+                $("#myname,#mynamex").text(name); $("#chatwith_nm").text('');
+            })
+            $(document).on('click', ".chatwith", function (ee) {
+                var cwith_id = ee.currentTarget.id; var cwith_name = ee.currentTarget.title;
+                chatwith = { id: cwith_id, username: cwith_name, flag: 'user' };
+                
+                $(".userlistx").css('display', "none");
+                $(".chatpagex").css('display', "block");
+                $("#chatwith_nm").text(cwith_name);
+                //console.log(chatwith);
+            })
             $(document).on('change',"#emojis input",function(ee){
                 var typed_msg = $('#input').val();
-                console.log(typed_msg+" "+ee.target.value+" ");
+                //console.log(typed_msg+" "+ee.target.value+" ");
                 $('#input').val(typed_msg+" "+ee.target.value+" ")
                 
             })
@@ -233,7 +276,7 @@
             messages.scrollTop(messages.prop('scrollHeight'));
         }
         function showpic(imgSrc){
-             console.log(imgSrc);
+            console.log(imgSrc);
         }
         function loadEmog(){
             $("#emojis").html('');
